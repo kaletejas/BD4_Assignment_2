@@ -140,6 +140,28 @@ app.get('/players', async (req,res)=>{
 })
 
 
+//fn 7
+async function fetchPlayerById(id){
+  let query = 'SELECT * FROM players WHERE id=?'
+  let response = await db.all(query, [id])
+  return {players : response}
+}
+//Exercise 7: Get Player by ID
+app.get('/players/details/:id', async (req,res)=>{
+  let id = req.params.id;
+  try{
+    let results = await fetchPlayerById(id);
+    if(results.players.length === 0 ){
+      res.status(404).json({message : 'Players not found for id: '+ id})
+    }
+    res.status(200).json(results)
+  }catch(error){
+    res.status(500).json({error : error.message})
+  }
+})
+
+
+
 
 
 app.listen(port, () => {
