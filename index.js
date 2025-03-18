@@ -120,6 +120,25 @@ app.get('/games/sort-by-rating', async (req,res)=>{
   }
 })
 
+//fn 6
+async function fetchAllPlayers(){
+  let query = 'SELECT * FROM players'
+  let response = await db.all(query, [])
+  return {players : response}
+}
+//Exercise 6: Get All Players
+app.get('/players', async (req,res)=>{
+  try{
+    let results = await fetchAllPlayers();
+    if(results.players.length === 0 ){
+      res.status(404).json({message : 'Players not found'})
+    }
+    res.status(200).json(results)
+  }catch(error){
+    res.status(500).json({error : error.message})
+  }
+})
+
 
 
 
