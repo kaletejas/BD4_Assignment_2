@@ -79,6 +79,29 @@ app.get('/games/genre/:genre', async (req,res)=>{
   }
 })
 
+//fn 4
+async function fetchGameByPlatform(platform){
+  let query = 'SELECT * FROM games WHERE platform =?'
+  let response = await db.all(query, [platform])
+  return {games : response}
+}
+
+//Exercise 4: Get Games by Platform
+app.get('/games/platform/:platform', async (req,res)=>{
+  let platform = req.params.platform;
+  try{
+    let results = await fetchGameByPlatform(platform);
+    if(results.games.length === 0 ){
+      res.status(404).json({message : 'Game not found for platform: ' + platform})
+    }
+    res.status(200).json(results)
+  }catch(error){
+    res.status(500).json({error : error.message})
+  }
+})
+
+
+
 app.listen(port, () => {
   console.log(`Example app listening at http://localhost:${port}`);
 });
