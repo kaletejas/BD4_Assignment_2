@@ -18,6 +18,7 @@ let db;
   });
 })();
 
+//fn 1
 async function fetchAllGames(){
   let query = 'SELECT * FROM games'
   let response = await db.all(query, [])
@@ -36,7 +37,26 @@ app.get('/games', async (req,res)=>{
     res.status(500).json({error : error.message})
   }
 })
+//fn 2
+async function fetchGameById(id){
+  let query = 'SELECT * FROM games WHERE id =?'
+  let response = await db.all(query, [id])
+  return {games : response}
+}
 
+//Exercise 2: Get Game by ID
+app.get('/games/details/:id', async (req,res)=>{
+  let id = req.params.id;
+  try{
+    let results = await fetchGameById(id);
+    if(results.games.length === 0 ){
+      res.status(404).json({message : 'Game not found for id: ' + id})
+    }
+    res.status(200).json(results)
+  }catch(error){
+    res.status(500).json({error : error.message})
+  }
+})
 
 app.listen(port, () => {
   console.log(`Example app listening at http://localhost:${port}`);
