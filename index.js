@@ -58,6 +58,27 @@ app.get('/games/details/:id', async (req,res)=>{
   }
 })
 
+//fn 3
+async function fetchGameByGenre(genre){
+  let query = 'SELECT * FROM games WHERE genre =?'
+  let response = await db.all(query, [genre])
+  return {games : response}
+}
+
+//Exercise 3: Get Games by Genre
+app.get('/games/genre/:genre', async (req,res)=>{
+  let genre = req.params.genre;
+  try{
+    let results = await fetchGameByGenre(genre);
+    if(results.games.length === 0 ){
+      res.status(404).json({message : 'Game not found for genre: ' + genre})
+    }
+    res.status(200).json(results)
+  }catch(error){
+    res.status(500).json({error : error.message})
+  }
+})
+
 app.listen(port, () => {
   console.log(`Example app listening at http://localhost:${port}`);
 });
