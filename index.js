@@ -100,6 +100,27 @@ app.get('/games/platform/:platform', async (req,res)=>{
   }
 })
 
+//fn 5
+async function sortGamesByRating(){
+  let query = 'SELECT * FROM games ORDER BY rating DESC'
+  let response = await db.all(query, [])
+  return {games : response}
+}
+
+//Exercise 5: Get Games Sorted by Rating
+app.get('/games/sort-by-rating', async (req,res)=>{
+  try{
+    let results = await sortGamesByRating();
+    if(results.games.length === 0 ){
+      res.status(404).json({message : 'Game not found'})
+    }
+    res.status(200).json(results)
+  }catch(error){
+    res.status(500).json({error : error.message})
+  }
+})
+
+
 
 
 app.listen(port, () => {
