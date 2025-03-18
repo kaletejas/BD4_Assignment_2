@@ -179,6 +179,28 @@ app.get('/players/platform/:platform', async (req,res)=>{
   }
 })
 
+//fn 9
+async function sortPlayersByRating(){
+  let query = 'SELECT * FROM players ORDER BY rating DESC'
+  let response = await db.all(query, [])
+  return {players : response}
+}
+//Exercise 9: Get Players Sorted by Rating
+app.get('/players/sort-by-rating', async (req,res)=>{
+  try{
+    let results = await sortPlayersByRating();
+    if(results.players.length === 0 ){
+      res.status(404).json({message : 'Players not found'})
+    }
+    res.status(200).json(results)
+  }catch(error){
+    res.status(500).json({error : error.message})
+  }
+})
+
+
+
+
 
 
 app.listen(port, () => {
