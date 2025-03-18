@@ -159,8 +159,25 @@ app.get('/players/details/:id', async (req,res)=>{
     res.status(500).json({error : error.message})
   }
 })
-
-
+//fn 8
+async function fetchPlayerByPlatform(platform){
+  let query = 'SELECT * FROM players WHERE platform=?'
+  let response = await db.all(query, [platform])
+  return {players : response}
+}
+//Exercise 8: Get Players by Platform
+app.get('/players/platform/:platform', async (req,res)=>{
+  let platform = req.params.platform;
+  try{
+    let results = await fetchPlayerByPlatform(platform);
+    if(results.players.length === 0 ){
+      res.status(404).json({message : 'Players not found for platform: '+ platform})
+    }
+    res.status(200).json(results)
+  }catch(error){
+    res.status(500).json({error : error.message})
+  }
+})
 
 
 
