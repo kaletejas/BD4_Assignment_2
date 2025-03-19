@@ -197,8 +197,24 @@ app.get('/players/sort-by-rating', async (req,res)=>{
     res.status(500).json({error : error.message})
   }
 })
-
-
+//fn 10
+async function fetchAllTournaments(){
+  let query = 'SELECT * FROM tournaments';
+  let response = await db.all(query, [])
+  return {tournaments : response}
+}
+//Exercise 10: Get All Tournaments
+app.get('/tournaments', async (req,res)=>{
+  try{
+    let results = await fetchAllTournaments();
+    if(results.tournaments.length === 0){
+      return res.status(404).json({message : 'Tournaments not found'})
+    }
+    res.status(200).json(results)
+  }catch(error){
+    return res.status(500).json({error : error.message})
+  }
+})
 
 
 
