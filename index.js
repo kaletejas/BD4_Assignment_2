@@ -255,7 +255,26 @@ app.get('/tournaments/game/:gameId', async (req,res)=>{
   }
 })
 
+
+//fn 13
+async function sortTournamentByPrice(){
+  let query = 'SELECT * FROM tournaments ORDER BY prizePool DESC';
+  let response = await db.all(query, [])
+  return {tournaments : response}
+}
+
 //Exercise 13: Get Tournaments Sorted by Prize Pool
+app.get('/tournaments/sort-by-prize-pool', async (req,res)=>{
+  try{
+    let results = await sortTournamentByPrice();
+    if(results.tournaments.length === 0){
+      return res.status(404).json({message : 'Tournaments not found'})
+    }
+    res.status(200).json(results)
+  }catch(error){
+    return res.status(500).json({error : error.message})
+  }
+})
 
 app.listen(port, () => {
   console.log(`Example app listening at http://localhost:${port}`);
