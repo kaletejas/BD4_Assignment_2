@@ -215,9 +215,47 @@ app.get('/tournaments', async (req,res)=>{
     return res.status(500).json({error : error.message})
   }
 })
+//fn 11
+async function fetchTournamentById(id){
+  let query = 'SELECT * FROM tournaments WHERE id =?';
+  let response = await db.all(query, [id])
+  return {tournaments : response}
+}
+//Exercise 11: Get Tournament by ID
+app.get('/tournaments/details/:id', async (req,res)=>{
+  let id = req.params.id;
+  try{
+    let results = await fetchTournamentById(id);
+    if(results.tournaments.length === 0){
+      return res.status(404).json({message : 'Tournaments not found for id: '+ id})
+    }
+    res.status(200).json(results)
+  }catch(error){
+    return res.status(500).json({error : error.message})
+  }
+})
+//fn 12
+async function fetchTournamentByGameId(gameId){
+  let query = 'SELECT * FROM tournaments WHERE gameId =?';
+  let response = await db.all(query, [gameId])
+  return {tournaments : response}
+}
 
+//Exercise 12: Get Tournaments by Game ID
+app.get('/tournaments/game/:gameId', async (req,res)=>{
+  let gameId = req.params.gameId;
+  try{
+    let results = await fetchTournamentByGameId(gameId);
+    if(results.tournaments.length === 0){
+      return res.status(404).json({message : 'Tournaments not found for Game Id: '+ gameId})
+    }
+    res.status(200).json(results)
+  }catch(error){
+    return res.status(500).json({error : error.message})
+  }
+})
 
-
+//Exercise 13: Get Tournaments Sorted by Prize Pool
 
 app.listen(port, () => {
   console.log(`Example app listening at http://localhost:${port}`);
